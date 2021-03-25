@@ -6,7 +6,9 @@ using AdvancePagination.Demo.Filters;
 using AdvancePagination.Demo.Helpers;
 using AdvancePagination.Demo.Models;
 using AdvancePagination.Demo.Services;
+using AdvancePagination.Demo.Validation;
 using AdvancePagination.Demo.Wrapper;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +57,40 @@ namespace AdvancePagination.Demo.Controllers
                 .ToListAsync();
             var totalRecords = await context.Posts.CountAsync();
              var pagedReponse = PaginationHelper.CreatePagedReponse<Post>(pagedData, validFilter, totalRecords, uriService, route);
-    return Ok(pagedReponse);
+               return Ok(pagedReponse);
+        }
+        [HttpPost]
+        public IActionResult Create(Post post)
+        {
+             context.Posts.Add(post); 
+             context.SaveChanges();
+             return Json(new {message = "new Post Added", post = post});  
+        }
+        [Route("AddNew")]
+        [HttpPost]
+        [System.Obsolete]
+        public IActionResult AddWithCustomeValidationResponse()
+        {
+            PostValidator validator = new PostValidator();
+            List<string> ValidationMessages = new List<string>();
+            var tester = new Post
+            {
+                Title = "Ok",
+                Description = "",
+                CreatedBy = "1",
+            };
+            var validationResult = validator.Validate(tester);
+            var response = new ResponseModel();
+            if (!validationResult.IsValid)
+            {
+                response.IsValid = false;
+                foreach (ValidationFailure failure in validationResult.Errors)
+                {
+                    ValidationMessages.Add(failure.ErrorMessage);
+                }
+                response.ValidationMessages = ValidationMessages;
+            }
+            return Ok(response);
         }
 
     }

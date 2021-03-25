@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdvancePagination.Demo.Data;
 using AdvancePagination.Demo.Services;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -45,6 +46,12 @@ namespace AdvancePagination.Demo
              var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
              return new UriService(uri);
            });
+           services.AddControllers()
+                .AddFluentValidation(s => 
+                { 
+                    s.RegisterValidatorsFromAssemblyContaining<Startup>(); 
+                    s.RunDefaultMvcValidationAfterFluentValidationExecutes = false; 
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
