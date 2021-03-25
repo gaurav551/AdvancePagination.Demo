@@ -8,7 +8,7 @@ namespace AdvancePagination.Demo.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Post, PostDTO>(); //Map from Developer Object to DeveloperDTO Object
+            CreateMap<Post, PostDTO>(); //Map from Post to PostDTO.
         }
     }
 }
