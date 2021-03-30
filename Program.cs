@@ -16,7 +16,7 @@ namespace AdvancePagination.Demo
         public static async Task Main(string[] args)
         {
            IHost host = CreateHostBuilder(args).Build();
-            //Run SeedUsers method from ApplicationDbContext
+            //Run Seed method from PostSeeder
             using (var scope = host.Services.CreateScope())
             {
                 System.Console.WriteLine("Seeding Sample Post");;
